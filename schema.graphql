@@ -14,7 +14,7 @@ type Loan @entity(immutable: false) {
   repaymentAmount: BigInt! # uint256
   paidAmount: BigInt! # uint256
   leftAmount: BigInt! # uint256
-  loan_event: [Event!]! @derivedFrom(field: "loan")
+  events: [Event!]! @derivedFrom(field: "loan")
 }
 
 enum EventType {

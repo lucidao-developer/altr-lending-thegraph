@@ -6,7 +6,8 @@ import {
   LoanRepayment as LoanRepaymentEvent,
 } from "../generated/Lending/Lending";
 import { Event, Loan } from "../generated/schema";
-import { fetchRepaymentAmount } from "./utils/lending.utils";
+import { fetchRepaymentAmount } from "./utils";
+
 
 export function handleLoanCreated(event: LoanCreatedEvent): void {
   let repayment = fetchRepaymentAmount(

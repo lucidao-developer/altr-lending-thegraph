@@ -1,0 +1,33 @@
+type Loan @entity(immutable: false) {
+  id: ID!
+  live: Boolean!
+  borrower: Bytes! # address
+  token: Bytes! # address
+  amount: BigInt! # uint256
+  nftCollection: Bytes! # address
+  nftId: BigInt! # uint256
+  duration: BigInt! # uint256
+  interestRate: BigInt! # uint256
+  collateralValue: BigInt! # uint256
+  lender: Bytes! # address
+  startTime: BigInt! # uint256
+  repaymentAmount: BigInt! # uint256
+  paidAmount: BigInt! # uint256
+  leftAmount: BigInt! # uint256
+  loan_event: [Event!]! @derivedFrom(field: "loan")
+}
+
+enum EventType {
+  LOAN_REQUESTED
+  LOAN_ACCEPTED
+  LOAN_REPAYMENT
+  LOAN_LIQUIDATED
+}
+
+type Event @entity(immutable: false) {
+  id: ID!
+  eventType: EventType
+  time: BigInt!
+  transactionHash: Bytes!
+  loan: Loan!
+}

@@ -1,0 +1,31 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Lending
+    network: sepolia
+    source:
+      address: "0x84c9ddcf77386078820d63fa17d8711e77408a39"
+      abi: Lending
+      startBlock: 3849529
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Loan
+        - Event
+      abis:
+        - name: Lending
+          file: ./abis/Lending.json
+      eventHandlers:
+        - event: LoanAccepted(uint256,address,uint256)
+          handler: handleLoanAccepted
+        - event: LoanCreated(uint256,address,address,uint256,address,uint256,uint256,uint256,uint256)
+          handler: handleLoanCreated
+        - event: LoanLiquidated(uint256,uint256,address,uint256,uint256)
+          handler: handleLoanLiquidated
+        - event: LoanRepayment(uint256,uint256,uint256,uint256)
+          handler: handleLoanRepayment
+      file: ./src/lending.ts

@@ -37,6 +37,7 @@ export function handleLoanCreated(event: LoanCreatedEvent): void {
   entity.collateralValue = event.params.collateralValue;
   entity.lender = Address.zero();
   entity.startTime = BigInt.zero();
+  entity.endTime = BigInt.zero();
   entity.paidAmount = BigInt.zero();
   entity.repaymentAmount = repayment;
   entity.leftAmount = event.params.amount;
@@ -62,6 +63,7 @@ export function handleLoanAccepted(event: LoanAcceptedEvent): void {
   entity.live = true;
   entity.lender = event.params.lender;
   entity.startTime = event.params.startTime;
+  entity.endTime = event.params.startTime.plus(entity.duration);
 
   entity.save();
 

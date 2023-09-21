@@ -11,6 +11,7 @@ type Loan @entity(immutable: false) {
   collateralValue: BigInt! # uint256
   lender: Bytes! # address
   startTime: BigInt! # uint256
+  endTime: BigInt! # uint256
   repaymentAmount: BigInt! # uint256
   paidAmount: BigInt! # uint256
   leftAmount: BigInt! # uint256

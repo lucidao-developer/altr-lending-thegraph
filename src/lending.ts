@@ -4,48 +4,84 @@ import {
   LoanCreated as LoanCreatedEvent,
   LoanLiquidated as LoanLiquidatedEvent,
   LoanRepayment as LoanRepaymentEvent,
+  LoanCancelled as LoanCancelledEvent,
+  NFTClaimed as NFTClaimedEvent
 } from "../generated/Lending/Lending";
+import { Lending } from "../generated/Lending/Lending";
 import { Event, Loan } from "../generated/schema";
-import { fetchRepaymentAmount } from "./utils";
 
+function calculateDueAmount(
+  _lendingAddress: Address,
+  _amount: BigInt,
+  _interestRate: BigInt,
+  _duration: BigInt,
+): BigInt {
+  let lending = Lending.bind(_lendingAddress);
+  let protocolfee = lending.protocolFee();
+  let originationFee = lending.getOriginationFee(_amount);
+  let debt = lending.getDebtWithPenalty(_amount, _interestRate.plus(protocolfee), _duration, _duration)
 
-export function handleLoanCreated(event: LoanCreatedEvent): void {
-  let repayment = fetchRepaymentAmount(
-    event.address,
-    event.params.amount,
-    BigInt.zero(),
-    event.params.interestRate,
-    event.params.duration,
-    event.block.timestamp,
-    BigInt.zero()
-  );
+  return _amount.plus(originationFee).plus(debt)
+}
 
-  let entity = Loan.load(event.params.loanId.toString());
+function fetchLoan(_loanId: BigInt): Loan {
+  let entity = Loan.load(_loanId.toString());
 
   if (entity == null) {
-    entity = new Loan(event.params.loanId.toString());
+    entity = new Loan(_loanId.toString());
   }
 
-  entity.live = false;
+  return entity
+}
+
+export function handleLoanCreated(event: LoanCreatedEvent): void {
+  let entity = fetchLoan(event.params.loanId);
+
+  let dueAmount = calculateDueAmount(
+    event.address,
+    event.params.amount,
+    event.params.interestRate,
+    event.params.duration,
+  ); 
+
+  entity.status = "REQUESTED";
   entity.borrower = event.params.borrower;
   entity.token = event.params.token;
   entity.amount = event.params.amount;
   entity.nftCollection = event.params.nftCollection;
   entity.nftId = event.params.nftId;
   entity.duration = event.params.duration;
+  entity.deadline = event.params.deadline;
   entity.interestRate = event.params.interestRate;
   entity.collateralValue = event.params.collateralValue;
+  entity.dueAmount = dueAmount;
   entity.lender = Address.zero();
   entity.startTime = BigInt.zero();
   entity.endTime = BigInt.zero();
-  entity.paidAmount = BigInt.zero();
-  entity.repaymentAmount = repayment;
-  entity.leftAmount = event.params.amount;
+  entity.totalPaid = BigInt.zero();
+  entity.feePaid = BigInt.zero();
+  entity.liquidator = Address.zero();
 
   entity.save();
 
   let ev = new Event(event.transaction.hash.toHex());
-  ev.eventType = "LOAN_REQUESTED";
+  ev.eventType = "REQUESTED";
+  ev.time = event.block.timestamp;
+  ev.transactionHash = event.transaction.hash;
+  ev.loan = entity.id;
+
+  ev.save();
+}
+
+export function handleLoanCancelled(event: LoanCancelledEvent): void {
+  let entity = fetchLoan(event.params.loanId);
+
+  entity.status = "CANCELLED";
+
+  entity.save();
+
+  let ev = new Event(event.transaction.hash.toHex());
+  ev.eventType = "CANCELLED";
   ev.time = event.block.timestamp;
   ev.transactionHash = event.transaction.hash;
   ev.loan = entity.id;
@@ -54,13 +90,9 @@ export function handleLoanCreated(event: LoanCreatedEvent): void {
 }
 
 export function handleLoanAccepted(event: LoanAcceptedEvent): void {
-  let entity = Loan.load(event.params.loanId.toString());
+  let entity = fetchLoan(event.params.loanId);
 
-  if (entity == null) {
-    entity = new Loan(event.params.loanId.toString());
-  }
-
-  entity.live = true;
+  entity.status = "ACCEPTED";
   entity.lender = event.params.lender;
   entity.startTime = event.params.startTime;
   entity.endTime = event.params.startTime.plus(entity.duration);
@@ -68,83 +100,63 @@ export function handleLoanAccepted(event: LoanAcceptedEvent): void {
   entity.save();
 
   let ev = new Event(event.transaction.hash.toHex());
-  ev.eventType = "LOAN_ACCEPTED";
+  ev.eventType = "ACCEPTED";
   ev.time = event.block.timestamp;
   ev.transactionHash = event.transaction.hash;
   ev.loan = entity.id;
 
-  entity.save();
   ev.save();
 }
 
 export function handleLoanLiquidated(event: LoanLiquidatedEvent): void {
-  let entity = Loan.load(event.params.loanId.toString());
+  let entity = fetchLoan(event.params.loanId);
 
-  if (entity == null) {
-    entity = new Loan(event.params.loanId.toString());
-  }
-
-  let repayment = fetchRepaymentAmount(
-    event.address,
-    entity.amount,
-    event.params.paidAmount,
-    entity.interestRate,
-    entity.duration,
-    event.block.timestamp,
-    entity.startTime
-  );
-
-  entity.live = false;
-  entity.paidAmount = event.params.paidAmount;
-  entity.repaymentAmount = repayment;
-  entity.leftAmount = entity.amount.minus(event.params.paidAmount);
+  entity.status = "LIQUIDATED";
+  entity.totalPaid = event.params.totalPaid;
+  entity.feePaid = event.params.fees
+  entity.liquidator = event.params.liquidator
 
   entity.save();
 
   let ev = new Event(event.transaction.hash.toHex());
-  ev.eventType = "LOAN_LIQUIDATED";
+  ev.eventType = "LIQUIDATED";
   ev.time = event.block.timestamp;
   ev.transactionHash = event.transaction.hash;
   ev.loan = entity.id;
 
-  entity.save();
   ev.save();
 }
 
 export function handleLoanRepayment(event: LoanRepaymentEvent): void {
-  let entity = Loan.load(event.params.loanId.toString());
+  let entity = fetchLoan(event.params.loanId);
 
-  if (entity == null) {
-    entity = new Loan(event.params.loanId.toString());
-  }
-
-  let repayment = fetchRepaymentAmount(
-    event.address,
-    entity.amount,
-    event.params.paidAmount,
-    entity.interestRate,
-    entity.duration,
-    event.block.timestamp,
-    entity.startTime
-  );
-
-  if (entity.amount.equals(event.params.paidAmount)) {
-    entity.live = false;
-  } else {
-    entity.live = true;
-  }
-  entity.paidAmount = event.params.paidAmount;
-  entity.repaymentAmount = repayment;
-  entity.leftAmount = entity.amount.minus(event.params.paidAmount);
+  entity.status = "REPAID";
+  entity.totalPaid = event.params.totalPaid;
+  entity.feePaid = event.params.fees
 
   entity.save();
 
   let ev = new Event(event.transaction.hash.toHex());
-  ev.eventType = "LOAN_REPAYMENT";
+  ev.eventType = "REPAID";
   ev.time = event.block.timestamp;
   ev.transactionHash = event.transaction.hash;
   ev.loan = entity.id;
 
+  ev.save();
+}
+
+export function handleNFTClaimed(event: NFTClaimedEvent): void {
+  let entity = fetchLoan(event.params.loanId);
+
+  entity.status = "NFT_CLAIMED";
+
   entity.save();
+
+  let ev = new Event(event.transaction.hash.toHex());
+  ev.eventType = "NFT_CLAIMED";
+  ev.time = event.block.timestamp;
+  ev.transactionHash = event.transaction.hash;
+  ev.loan = entity.id;
+
   ev.save();
 }

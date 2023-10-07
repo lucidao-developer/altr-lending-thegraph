@@ -1,0 +1,55 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Lending
+    network: { { network } }
+    source:
+      address: "{{LendingAddress}}"
+      abi: Lending
+      startBlock: { { LendingStartBlock } }
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Loan
+        - Event
+      abis:
+        - name: Lending
+          file: ./abis/Lending.json
+      eventHandlers:
+        - event: LoanAccepted(uint256,address,uint256)
+          handler: handleLoanAccepted
+        - event: LoanCreated(uint256,address,address,uint256,address,uint256,uint256,uint256,uint256)
+          handler: handleLoanCreated
+        - event: LoanLiquidated(uint256,uint256,address,uint256,uint256)
+          handler: handleLoanLiquidated
+        - event: LoanRepayment(uint256,uint256,uint256,uint256)
+          handler: handleLoanRepayment
+      file: ./src/lending.ts
+  - kind: ethereum
+    name: PriceIndex
+    network: { { network } }
+    source:
+      address: "{{PriceIndexAddress}}"
+      abi: PriceIndex
+      startBlock: { { PriceIndexStartBlock } }
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Collection
+        - Nft
+        - Valuation
+      abis:
+        - name: PriceIndex
+          file: ./abis/PriceIndex.json
+      eventHandlers:
+        - event: CollectionRegistered(address,bytes32)
+          handler: handleCollectionRegistered
+        - event: ValuationAdded(address,uint256,Valuation)
+          handler: handleValuationAdded
+      file: ./src/priceIndex.ts

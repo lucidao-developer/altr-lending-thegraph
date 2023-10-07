@@ -24,15 +24,45 @@ type Loan @entity(immutable: false) {
   startTime: BigInt!
   endTime: BigInt!
   totalPaid: BigInt!
-  feePaid: BigInt! 
+  feePaid: BigInt!
   liquidator: Bytes!
   events: [Event!]! @derivedFrom(field: "loan")
 }
 
 type Event @entity(immutable: true) {
+  live: Boolean!
+  borrower: Bytes! # address
+  token: Bytes! # address
+  amount: BigInt! # uint256
+  nft: Nft!
+  duration: BigInt! # uint256
+  interestRate: BigInt! # uint256
+  collateralValue: BigInt! # uint256
+  lender: Bytes! # address
+  startTime: BigInt! # uint256
+  endTime: BigInt! # uint256
+  repaymentAmount: BigInt! # uint256
+  paidAmount: BigInt! # uint256
+  leftAmount: BigInt! # uint256
+  events: [Event!]! @derivedFrom(field: "loan")
+}
+
+type Collection @entity {
   id: ID!
-  eventType: LoanStatus!
-  time: BigInt!
-  transactionHash: Bytes!
-  loan: Loan!
+  address: Bytes! # address
+  oracle: Bytes! # bytes32
+}
+
+type Nft @entity {
+  id: ID!
+  collection: Collection!
+  tokenId: BigInt! # uint256
+  valuationHistory: [Valuation!]
+}
+
+type Valuation @entity {
+  id: ID!
+  price: BigInt! # uint256
+  ltv: BigInt! # uint256
+  timestamp: BigInt! # uint256
 }

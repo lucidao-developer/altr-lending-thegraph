@@ -33,3 +33,27 @@ dataSources:
         - event: NFTClaimed(indexed uint256)
           handler: handleNFTClaimed
       file: ./src/lending.ts
+  - kind: ethereum
+    name: PriceIndex
+    network: sepolia
+    source:
+      address: "0x84c9ddcf77386078820d63fa17d8711e77408a39"
+      abi: PriceIndex
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Prova
+      abis:
+        - name: PriceIndex
+          file: ./abis/PriceIndex.json
+      eventHandlers:
+        - event: CollectionRegistered(address,bytes32)
+          handler: handleCollectionRegistered
+        - event: ValuationAdded(address,uint256,(uint256,uint256,uint256))
+          handler: handleValuationAdded
+        - event: NftCollectionFactorySet(address)
+          handler: handleNftCollectionCreated
+      file: ./src/priceIndex.ts

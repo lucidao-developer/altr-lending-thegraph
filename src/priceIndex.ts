@@ -1,10 +1,7 @@
-import {
-  ValuationAdded,
-  CollectionRegistered
-} from "../generated/PriceIndex/PriceIndex";
+import { ValuationAdded, CollectionRegistered } from "../generated/PriceIndex/PriceIndex";
 import { Collection, Nft, Valuation } from "../generated/schema";
 
-export function handleCollectionRegistered(event: CollectionRegistered) {
+export function handleCollectionRegistered(event: CollectionRegistered): void {
   const collectionId = event.params.collectionAddress.toHexString();
   const collection = new Collection(collectionId);
   collection.address = event.params.collectionAddress;
@@ -12,7 +9,7 @@ export function handleCollectionRegistered(event: CollectionRegistered) {
   collection.save();
 }
 
-export function handleValuationAdded(event: ValuationAdded) {
+export function handleValuationAdded(event: ValuationAdded): void {
   const collectionId = event.params.collectionAddress.toHexString();
   const nftId = `${collectionId}${event.params.nftId}`;
   const valuationId = `${nftId}${event.params.lastValuation.timestamp}`;
@@ -30,7 +27,7 @@ export function handleValuationAdded(event: ValuationAdded) {
   }
 
   let valuationHistory = nft.valuationHistory || [];
-  valuationHistory.push(valuationId);
+  valuationHistory!.push(valuationId);
   nft.valuationHistory = valuationHistory;
 
   nft.save();

@@ -1,0 +1,7 @@
+{
+  "network": "mumbai",
+  "LendingAddress": "0x127221D015246426BdB3954232dCd27cB5c4A951",
+  "LendingStartBlock": 40382553,
+  "PriceIndexAddress": "0x06BaaBE86065c79735e713dC0659765079BbEC17",
+  "PriceIndexStartBlock": 40281339
+}

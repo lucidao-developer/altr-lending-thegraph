@@ -1,0 +1,8 @@
+{
+  "goerli": {
+    "Lending": {
+      "address": "0xEf9531F1AEb6850D316f1D3d2ddA4e29C4E02Ce6",
+      "startBlock": 9290569
+    }
+  }
+}

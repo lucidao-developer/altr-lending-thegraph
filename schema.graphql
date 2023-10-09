@@ -1,0 +1,38 @@
+enum LoanStatus {
+  REQUESTED
+  ACCEPTED
+  REPAID
+  LIQUIDATED
+  CANCELLED
+  NFT_CLAIMED
+}
+
+type Loan @entity(immutable: false) {
+  id: ID!
+  status: LoanStatus!
+  borrower: Bytes!
+  token: Bytes!
+  amount: BigInt!
+  nftCollection: Bytes!
+  nftId: BigInt!
+  duration: BigInt!
+  deadline: BigInt!
+  interestRate: BigInt!
+  collateralValue: BigInt!
+  dueAmount: BigInt!
+  lender: Bytes!
+  startTime: BigInt!
+  endTime: BigInt!
+  totalPaid: BigInt!
+  feePaid: BigInt! 
+  liquidator: Bytes!
+  events: [Event!]! @derivedFrom(field: "loan")
+}
+
+type Event @entity(immutable: true) {
+  id: ID!
+  eventType: LoanStatus!
+  time: BigInt!
+  transactionHash: Bytes!
+  loan: Loan!
+}

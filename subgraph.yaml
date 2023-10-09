@@ -1,0 +1,35 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Lending
+    network: mumbai
+    source:
+      address: "0x127221D015246426BdB3954232dCd27cB5c4A951"
+      abi: Lending
+      startBlock: 40382553
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Loan
+        - Event
+      abis:
+        - name: Lending
+          file: ./abis/Lending.json
+      eventHandlers:
+        - event: LoanCreated(indexed uint256,indexed address,address,uint256,indexed address,uint256,uint256,uint256,uint256,uint256)
+          handler: handleLoanCreated
+        - event: LoanAccepted(indexed uint256,indexed address,uint256)
+          handler: handleLoanAccepted
+        - event: LoanCancelled(indexed uint256)
+          handler: handleLoanCancelled
+        - event: LoanRepayment(indexed uint256,uint256,uint256)
+          handler: handleLoanRepayment
+        - event: LoanLiquidated(indexed uint256,indexed address,uint256,uint256)
+          handler: handleLoanLiquidated
+        - event: NFTClaimed(indexed uint256)
+          handler: handleNFTClaimed
+      file: ./src/lending.ts

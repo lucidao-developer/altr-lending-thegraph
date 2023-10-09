@@ -2,9 +2,12 @@
   "name": "altr-lending",
   "license": "UNLICENSED",
   "scripts": {
+    "prepare-testnet": "source .env.development && mustache config/mumbai.json subgraph.template.yaml > subgraph.yaml && graph auth --product hosted-service $TOKEN",
+    "prepare-mainnet": "source .env.production && mustache config/polygon.json subgraph.template.yaml > subgraph.yaml && graph auth --product hosted-service $TOKEN",
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --studio altr-lending",
+    "deploy-mainnet": "source .env.production && graph deploy --node https://api.thegraph.com/deploy/ $NAME",
+    "deploy-testnet": "source .env.development && graph deploy --node https://api.thegraph.com/deploy/ $NAME",
     "test": "graph test"
   },
   "dependencies": {
@@ -12,6 +15,7 @@
     "@graphprotocol/graph-ts": "0.29.1"
   },
   "devDependencies": {
-    "matchstick-as": "0.5.0"
+    "matchstick-as": "0.5.0",
+    "mustache": "^4.2.0"
   }
 }

@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Lending
-    network: mumbai
+    network: {{network}}
     source:
-      address: "0x127221D015246426BdB3954232dCd27cB5c4A951"
+      address: "{{LendingAddress}}"
       abi: Lending
-      startBlock: 40382553
+      startBlock: {{LendingStartBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -31,11 +31,11 @@ dataSources:
       file: ./src/lending.ts
   - kind: ethereum
     name: PriceIndex
-    network: mumbai
+    network: {{network}}
     source:
-      address: "0x06BaaBE86065c79735e713dC0659765079BbEC17"
+      address: "{{PriceIndexAddress}}"
       abi: PriceIndex
-      startBlock: 40281339
+      startBlock: {{PriceIndexStartBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

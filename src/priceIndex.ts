@@ -3,7 +3,10 @@ import { Collection, Nft, Valuation } from "../generated/schema";
 
 export function handleCollectionRegistered(event: CollectionRegistered): void {
   const collectionId = event.params.collectionAddress.toHexString();
-  const collection = new Collection(collectionId);
+  let collection = Collection.load(collectionId);
+  if (collection == null) {
+    collection = new Collection(collectionId);
+  }
   collection.address = event.params.collectionAddress;
   collection.oracle = event.params.oracleRole;
   collection.save();

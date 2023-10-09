@@ -13,8 +13,7 @@ type Loan @entity(immutable: false) {
   borrower: Bytes!
   token: Bytes!
   amount: BigInt!
-  nftCollection: Bytes!
-  nftId: BigInt!
+  nft: Nft!
   duration: BigInt!
   deadline: BigInt!
   interestRate: BigInt!

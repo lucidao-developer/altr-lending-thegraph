@@ -7,49 +7,19 @@ import {
   LoanCancelled as LoanCancelledEvent,
   NFTClaimed as NFTClaimedEvent
 } from "../generated/Lending/Lending";
-import { Lending } from "../generated/Lending/Lending";
-import { Event, Loan } from "../generated/schema";
-
-function calculateDueAmount(
-  _lendingAddress: Address,
-  _amount: BigInt,
-  _interestRate: BigInt,
-  _duration: BigInt,
-): BigInt {
-  let lending = Lending.bind(_lendingAddress);
-  let protocolfee = lending.protocolFee();
-  let originationFee = lending.getOriginationFee(_amount);
-  let debt = lending.getDebtWithPenalty(_amount, _interestRate.plus(protocolfee), _duration, _duration)
-
-  return _amount.plus(originationFee).plus(debt)
-}
-
-function fetchLoan(_loanId: BigInt): Loan {
-  let entity = Loan.load(_loanId.toString());
-
-  if (entity == null) {
-    entity = new Loan(_loanId.toString());
-  }
-
-  return entity
-}
+import { Event } from "../generated/schema";
+import { fetchLoan, calculateDueAmount, fetchNft } from "./utils";
 
 export function handleLoanCreated(event: LoanCreatedEvent): void {
   let entity = fetchLoan(event.params.loanId);
-
-  let dueAmount = calculateDueAmount(
-    event.address,
-    event.params.amount,
-    event.params.interestRate,
-    event.params.duration,
-  ); 
+  const nft = fetchNft(`${event.params.nftCollection.toHexString()}${event.params.nftId}`);
+  let dueAmount = calculateDueAmount(event.address, event.params.amount, event.params.interestRate, event.params.duration);
 
   entity.status = "REQUESTED";
   entity.borrower = event.params.borrower;
   entity.token = event.params.token;
   entity.amount = event.params.amount;
-  entity.nftCollection = event.params.nftCollection;
-  entity.nftId = event.params.nftId;
+  entity.nft = nft.id;
   entity.duration = event.params.duration;
   entity.deadline = event.params.deadline;
   entity.interestRate = event.params.interestRate;
@@ -113,8 +83,8 @@ export function handleLoanLiquidated(event: LoanLiquidatedEvent): void {
 
   entity.status = "LIQUIDATED";
   entity.totalPaid = event.params.totalPaid;
-  entity.feePaid = event.params.fees
-  entity.liquidator = event.params.liquidator
+  entity.feePaid = event.params.fees;
+  entity.liquidator = event.params.liquidator;
 
   entity.save();
 
@@ -132,7 +102,7 @@ export function handleLoanRepayment(event: LoanRepaymentEvent): void {
 
   entity.status = "REPAID";
   entity.totalPaid = event.params.totalPaid;
-  entity.feePaid = event.params.fees
+  entity.feePaid = event.params.fees;
 
   entity.save();
 

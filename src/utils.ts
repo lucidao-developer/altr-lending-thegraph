@@ -2,11 +2,17 @@ import { Lending } from "../generated/Lending/Lending";
 import { Loan, Nft } from "../generated/schema";
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 
-export function calculateDueAmount(_lendingAddress: Address, _amount: BigInt, _interestRate: BigInt, _duration: BigInt): BigInt {
+export function calculateDueAmount(
+  _lendingAddress: Address,
+  _amount: BigInt,
+  _interestRate: BigInt,
+  _duration: BigInt,
+  _token: Address
+): BigInt {
   let lending = Lending.bind(_lendingAddress);
-  let protocolfee = lending.protocolFee();
-  let originationFee = lending.getOriginationFee(_amount);
-  let debt = lending.getDebtWithPenalty(_amount, _interestRate.plus(protocolfee), _duration, _duration);
+  let protocolFee = lending.protocolFee();
+  let originationFee = lending.getOriginationFee(_amount, _token);
+  let debt = lending.getDebtWithPenalty(_amount, _interestRate.plus(protocolFee), _duration, _duration);
 
   return _amount.plus(originationFee).plus(debt);
 }

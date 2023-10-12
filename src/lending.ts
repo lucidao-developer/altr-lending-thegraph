@@ -8,12 +8,18 @@ import {
   NFTClaimed as NFTClaimedEvent
 } from "../generated/Lending/Lending";
 import { Event } from "../generated/schema";
-import { fetchLoan, calculateDueAmount, fetchNft, removeFromArray } from "./utils";
+import { fetchLoan, calculateDueAmount, fetchNft } from "./utils";
 
 export function handleLoanCreated(event: LoanCreatedEvent): void {
   let entity = fetchLoan(event.params.loanId);
   let nft = fetchNft(`${event.params.nftCollection.toHexString()}${event.params.nftId}`);
-  let dueAmount = calculateDueAmount(event.address, event.params.amount, event.params.interestRate, event.params.duration);
+  let dueAmount = calculateDueAmount(
+    event.address,
+    event.params.amount,
+    event.params.interestRate,
+    event.params.duration,
+    event.params.token
+  );
 
   entity.status = "REQUESTED";
   entity.borrower = event.params.borrower;

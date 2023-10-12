@@ -6,7 +6,7 @@ dataSources:
     name: Lending
     network: mumbai
     source:
-      address: "0x127221D015246426BdB3954232dCd27cB5c4A951"
+      address: "0xbEAe0b8E2ECb9f1bc7Ec8cA19f2e3C1ce853544A"
       abi: Lending
       startBlock: 40382553
     mapping:
@@ -52,4 +52,43 @@ dataSources:
           handler: handleCollectionRegistered
         - event: ValuationAdded(address,uint256,(uint256,uint256,uint256))
           handler: handleValuationAdded
-      file: ./src/priceIndex.ts
+      file: ./src/price-index.ts
+  - kind: ethereum
+    name: NftCollectionFactory
+    network: mumbai
+    source:
+      address: '0x5C5Dd3f7651c49F144f3F3597Ed426fa9190152F'
+      abi: NftCollectionFactory
+      startBlock: 35742034
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+      - Collection
+      abis:
+        - name: NftCollectionFactory
+          file: ./abis/NftCollectionFactory.json
+      eventHandlers:
+        - event: CollectionCreated(indexed address,string,string,address)
+          handler: handleCollectionCreated
+      file: ./src/nft-collection-factory.ts
+templates:
+  - kind: ethereum
+    name: NftCollection
+    network: mumbai
+    source:
+      abi: NftCollection
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Nft
+      abis:
+        - name: NftCollection
+          file: ./abis/NftCollection.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/nft-collection.ts

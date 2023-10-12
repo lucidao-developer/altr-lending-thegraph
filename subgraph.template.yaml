@@ -52,4 +52,43 @@ dataSources:
           handler: handleCollectionRegistered
         - event: ValuationAdded(address,uint256,(uint256,uint256,uint256))
           handler: handleValuationAdded
-      file: ./src/priceIndex.ts
+      file: ./src/price-index.ts
+  - kind: ethereum
+    name: NftCollectionFactory
+    network: {{network}}
+    source:
+      address: '{{NftCollectionFactoryAddress}}'
+      abi: NftCollectionFactory
+      startBlock: {{NftCollectionFactoryStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+      - Collection
+      abis:
+        - name: NftCollectionFactory
+          file: ./abis/NftCollectionFactory.json
+      eventHandlers:
+        - event: CollectionCreated(indexed address,string,string,address)
+          handler: handleCollectionCreated
+      file: ./src/nft-collection-factory.ts
+templates:
+  - kind: ethereum
+    name: NftCollection
+    network: {{network}}
+    source:
+      abi: NftCollection
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Nft
+      abis:
+        - name: NftCollection
+          file: ./abis/NftCollection.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/nft-collection.ts

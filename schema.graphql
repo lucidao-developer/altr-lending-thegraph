@@ -39,7 +39,9 @@ type Event @entity(immutable: true) {
 type Collection @entity {
   id: ID!
   address: Bytes! # address
-  oracle: Bytes! # bytes32
+  oracle: Bytes # bytes32
+  name: String!
+  type: String!
 }
 
 type Nft @entity {
@@ -47,6 +49,8 @@ type Nft @entity {
   collection: Collection!
   tokenId: BigInt! # uint256
   valuationHistory: [Valuation!]
+  owner: String!
+  loans: [Loan!]
 }
 
 type Valuation @entity {

@@ -1,7 +1,7 @@
 {
   "network": "mumbai",
-  "LendingAddress": "0xbEAe0b8E2ECb9f1bc7Ec8cA19f2e3C1ce853544A",
-  "LendingStartBlock": 40382553,
+  "LendingAddress": "0x878041A4cc26564827c60515D6eB8FD600d320D1",
+  "LendingStartBlock": 42113316,
   "PriceIndexAddress": "0x06BaaBE86065c79735e713dC0659765079BbEC17",
   "PriceIndexStartBlock": 40281339,
   "NftCollectionFactoryAddress": "0x5C5Dd3f7651c49F144f3F3597Ed426fa9190152F",

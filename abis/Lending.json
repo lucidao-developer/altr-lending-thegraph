@@ -122,6 +122,17 @@
   {
     "inputs": [
       {
+        "internalType": "UD60x18",
+        "name": "x",
+        "type": "uint256"
+      }
+    ],
+    "name": "PRBMath_UD60x18_Ceil_Overflow",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "x",
         "type": "uint256"
@@ -154,6 +165,56 @@
       }
     ],
     "name": "BaseOriginationFeeSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [],
+    "name": "DefaultAdminDelayChangeCanceled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint48",
+        "name": "newDelay",
+        "type": "uint48"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint48",
+        "name": "effectSchedule",
+        "type": "uint48"
+      }
+    ],
+    "name": "DefaultAdminDelayChangeScheduled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [],
+    "name": "DefaultAdminTransferCanceled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newAdmin",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint48",
+        "name": "acceptSchedule",
+        "type": "uint48"
+      }
+    ],
+    "name": "DefaultAdminTransferScheduled",
     "type": "event"
   },
   {
@@ -814,6 +875,13 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "acceptDefaultAdminTransfer",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -939,12 +1007,45 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "newAdmin",
+        "type": "address"
+      }
+    ],
+    "name": "beginDefaultAdminTransfer",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "cancelDefaultAdminTransfer",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "_loanId",
         "type": "uint256"
       }
     ],
     "name": "cancelLoan",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint48",
+        "name": "newDelay",
+        "type": "uint48"
+      }
+    ],
+    "name": "changeDefaultAdminDelay",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -960,6 +1061,45 @@
     "name": "claimNFT",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "defaultAdmin",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "defaultAdminDelay",
+    "outputs": [
+      {
+        "internalType": "uint48",
+        "name": "",
+        "type": "uint48"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "defaultAdminDelayIncreaseWait",
+    "outputs": [
+      {
+        "internalType": "uint48",
+        "name": "",
+        "type": "uint48"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -1361,6 +1501,55 @@
   },
   {
     "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "pendingDefaultAdmin",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "newAdmin",
+        "type": "address"
+      },
+      {
+        "internalType": "uint48",
+        "name": "schedule",
+        "type": "uint48"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "pendingDefaultAdminDelay",
+    "outputs": [
+      {
+        "internalType": "uint48",
+        "name": "newDelay",
+        "type": "uint48"
+      },
+      {
+        "internalType": "uint48",
+        "name": "schedule",
+        "type": "uint48"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "priceIndex",
     "outputs": [
       {
@@ -1494,6 +1683,13 @@
       }
     ],
     "name": "revokeRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "rollbackDefaultAdminDelay",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

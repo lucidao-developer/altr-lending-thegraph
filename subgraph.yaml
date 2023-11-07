@@ -6,9 +6,9 @@ dataSources:
     name: Lending
     network: mumbai
     source:
-      address: "0xbEAe0b8E2ECb9f1bc7Ec8cA19f2e3C1ce853544A"
+      address: "0x878041A4cc26564827c60515D6eB8FD600d320D1"
       abi: Lending
-      startBlock: 40382553
+      startBlock: 42113316
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

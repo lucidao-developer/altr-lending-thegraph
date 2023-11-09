@@ -28,6 +28,8 @@ dataSources:
           handler: handleLoanLiquidated
         - event: LoanRepayment(indexed uint256,uint256,uint256)
           handler: handleLoanRepayment
+        - event: LoanCancelled(indexed uint256)
+          handler: handleLoanCancelled
       file: ./src/lending.ts
   - kind: ethereum
     name: PriceIndex

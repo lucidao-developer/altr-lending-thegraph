@@ -25,6 +25,7 @@ export function handleTransfer(event: Transfer): void {
       ev.time = event.block.timestamp;
       ev.transactionHash = event.transaction.hash;
       ev.loan = loan!.id;
+      ev.user = event.params.from;
       ev.save();
     }
   }

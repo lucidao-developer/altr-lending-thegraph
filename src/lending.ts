@@ -45,6 +45,7 @@ export function handleLoanCreated(event: LoanCreatedEvent): void {
   ev.time = event.block.timestamp;
   ev.transactionHash = event.transaction.hash;
   ev.loan = entity.id;
+  ev.user = event.params.borrower;
 
   ev.save();
 
@@ -67,6 +68,7 @@ export function handleLoanCancelled(event: LoanCancelledEvent): void {
   ev.time = event.block.timestamp;
   ev.transactionHash = event.transaction.hash;
   ev.loan = entity.id;
+  ev.user = entity.borrower;
 
   ev.save();
 }
@@ -86,6 +88,7 @@ export function handleLoanAccepted(event: LoanAcceptedEvent): void {
   ev.time = event.block.timestamp;
   ev.transactionHash = event.transaction.hash;
   ev.loan = entity.id;
+  ev.user = event.params.lender;
 
   ev.save();
 }
@@ -105,6 +108,7 @@ export function handleLoanLiquidated(event: LoanLiquidatedEvent): void {
   ev.time = event.block.timestamp;
   ev.transactionHash = event.transaction.hash;
   ev.loan = entity.id;
+  ev.user = event.params.liquidator;
 
   ev.save();
 }
@@ -123,6 +127,7 @@ export function handleLoanRepayment(event: LoanRepaymentEvent): void {
   ev.time = event.block.timestamp;
   ev.transactionHash = event.transaction.hash;
   ev.loan = entity.id;
+  ev.user = entity.borrower;
 
   ev.save();
 }
@@ -139,6 +144,7 @@ export function handleNFTClaimed(event: NFTClaimedEvent): void {
   ev.time = event.block.timestamp;
   ev.transactionHash = event.transaction.hash;
   ev.loan = entity.id;
+  ev.user = event.transaction.from;
 
   ev.save();
 }

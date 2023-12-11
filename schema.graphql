@@ -34,6 +34,7 @@ type Event @entity(immutable: true) {
   time: BigInt!
   transactionHash: Bytes!
   loan: Loan!
+  user: Bytes!
 }
 
 type Collection @entity {

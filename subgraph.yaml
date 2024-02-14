@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Lending
-    network: mumbai
+    network: matic
     source:
-      address: "0x5a7e5bCC5977d136fd334F94014DF17bf55eA5Ba"
+      address: "0xDc93413cBe690A1643d285C9f075B271372c9b36"
       abi: Lending
-      startBlock: 44536414
+      startBlock: 53513079
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -35,11 +35,11 @@ dataSources:
       file: ./src/lending.ts
   - kind: ethereum
     name: PriceIndex
-    network: mumbai
+    network: matic
     source:
       address: "0x06BaaBE86065c79735e713dC0659765079BbEC17"
       abi: PriceIndex
-      startBlock: 40281339
+      startBlock: 53308977
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -59,11 +59,11 @@ dataSources:
       file: ./src/price-index.ts
   - kind: ethereum
     name: NftCollectionFactory
-    network: mumbai
+    network: matic
     source:
-      address: '0x5C5Dd3f7651c49F144f3F3597Ed426fa9190152F'
+      address: '0x921efF6456E43E459Aba76b92a6B11EA1C896163'
       abi: NftCollectionFactory
-      startBlock: 35742034
+      startBlock: 43053721
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -80,7 +80,7 @@ dataSources:
 templates:
   - kind: ethereum
     name: NftCollection
-    network: mumbai
+    network: matic
     source:
       abi: NftCollection
     mapping:

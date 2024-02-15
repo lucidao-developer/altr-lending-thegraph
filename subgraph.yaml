@@ -37,7 +37,7 @@ dataSources:
     name: PriceIndex
     network: matic
     source:
-      address: "0x06BaaBE86065c79735e713dC0659765079BbEC17"
+      address: "0xe141fBd755a58303cBe35fA60957122C85f2E3D0"
       abi: PriceIndex
       startBlock: 53308977
     mapping:

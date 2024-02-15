@@ -1,10 +1,9 @@
 {
-    "network": "matic",
-    "LendingAddress": "0xDc93413cBe690A1643d285C9f075B271372c9b36",
-    "LendingStartBlock": 53513079,
-    "PriceIndexAddress": "0x06BaaBE86065c79735e713dC0659765079BbEC17",
-    "PriceIndexStartBlock": 53308977,
-    "NftCollectionFactoryAddress": "0x921efF6456E43E459Aba76b92a6B11EA1C896163",
-    "NftCollectionFactoryStartBlock": 43053721
-  }
-  
+  "network": "matic",
+  "LendingAddress": "0xDc93413cBe690A1643d285C9f075B271372c9b36",
+  "LendingStartBlock": 53513079,
+  "PriceIndexAddress": "0xe141fBd755a58303cBe35fA60957122C85f2E3D0",
+  "PriceIndexStartBlock": 53308977,
+  "NftCollectionFactoryAddress": "0x921efF6456E43E459Aba76b92a6B11EA1C896163",
+  "NftCollectionFactoryStartBlock": 43053721
+}

@@ -32,6 +32,40 @@ dataSources:
           handler: handleLoanCancelled
         - event: NFTClaimed(indexed uint256)
           handler: handleNFTClaimed
+        - event: PriceIndexSet(indexed address)
+          handler: handlePriceIndexSet
+        - event: AllowListSet(indexed address)
+          handler: handleAllowListSet
+        - event: GovernanceTreasurySet(indexed address)
+          handler: handleGovernanceTreasurySet
+        - event: RepayGracePeriodSet(uint256)
+          handler: handleRepayGracePeriodSet
+        - event: RepayGraceFeeSet(uint256)
+          handler: handleRepayGraceFeeSet
+        - event: ProtocolFeeSet(uint256)
+          handler: handleProtocolFeeSet
+        - event: LiquidationFeeSet(uint256)
+          handler: handleLiquidationFeeSet
+        - event: BaseOriginationFeeSet(uint256)
+          handler: handleBaseOriginationFeeSet
+        - event: TokensSet(address[])
+          handler: handleTokensSet
+        - event: TokensUnset(address[])
+          handler: handleTokensUnset
+        - event: LoanTypesSet(uint256[],uint256[])
+          handler: handleLoanTypesSet
+        - event: LoanTypesUnset(uint256[])
+          handler: handleLoanTypesUnset
+        - event: OriginationFeeRangesSet(uint256[])
+          handler: handleOriginationFeeRangesSet
+        - event: FeeReductionFactorSet(uint256)
+          handler: handleFeeReductionFactorSet
+        - event: LenderExclusiveLiquidationPeriodSet(uint256)
+          handler: handleLenderExclusiveLiquidationPeriodSet
+        - event: NFTAllowed(address,uint256)
+          handler: handleNFTAllowed
+        - event: NFTDisallowed(address,uint256)
+          handler: handleNFTDisallowed
       file: ./src/lending.ts
   - kind: ethereum
     name: PriceIndex

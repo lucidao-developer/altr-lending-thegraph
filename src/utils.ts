@@ -1,5 +1,5 @@
 import { Lending } from "../generated/Lending/Lending";
-import { Loan, Nft } from "../generated/schema";
+import { Loan, Nft, Params } from "../generated/schema";
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 
 export function calculateDueAmount(
@@ -32,6 +32,37 @@ export function fetchNft(nftId: string): Nft {
 
   if (entity == null) {
     entity = new Nft(nftId);
+  }
+
+  return entity;
+}
+
+export function fetchParams(lendingAddress: Address): Params {
+  let entity = Params.load(lendingAddress.toHexString());
+
+  if (entity == null) {
+    const lending = Lending.bind(lendingAddress);
+    entity = new Params(lendingAddress.toHexString());
+
+    entity.priceIndex = lending.priceIndex();
+    entity.allowList = lending.allowList();
+    entity.governanceTreasury = lending.governanceTreasury();
+    entity.repayGraceFee = lending.repayGraceFee();
+    entity.protocolFee = lending.protocolFee();
+    entity.liquidationFee = lending.liquidationFee();
+    entity.baseOriginationFee = lending.baseOriginationFee();
+    entity.feeReductionFactor = lending.feeReductionFactor();
+    entity.originationFeeRanges = [
+      lending.originationFeeRanges(BigInt.fromI32(0)),
+      lending.originationFeeRanges(BigInt.fromI32(1)),
+      lending.originationFeeRanges(BigInt.fromI32(2))
+    ];
+    entity.tokens = [];
+    entity.loanTypesDurations = [];
+    entity.loanTypesInterestRates = [];
+    entity.repayGracePeriod = lending.repayGracePeriod();
+    entity.lenderExclusiveLiquidationPeriod = lending.lenderExclusiveLiquidationPeriod();
+    entity.disallowedNfts = [];
   }
 
   return entity;

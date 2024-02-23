@@ -5,10 +5,27 @@ import {
   LoanLiquidated as LoanLiquidatedEvent,
   LoanRepayment as LoanRepaymentEvent,
   LoanCancelled as LoanCancelledEvent,
-  NFTClaimed as NFTClaimedEvent
+  NFTClaimed as NFTClaimedEvent,
+  PriceIndexSet,
+  AllowListSet,
+  GovernanceTreasurySet,
+  RepayGraceFeeSet,
+  RepayGracePeriodSet,
+  ProtocolFeeSet,
+  LiquidationFeeSet,
+  BaseOriginationFeeSet,
+  TokensSet,
+  TokensUnset,
+  LoanTypesSet,
+  LoanTypesUnset,
+  OriginationFeeRangesSet,
+  FeeReductionFactorSet,
+  LenderExclusiveLiquidationPeriodSet,
+  NFTAllowed,
+  NFTDisallowed
 } from "../generated/Lending/Lending";
 import { Event } from "../generated/schema";
-import { fetchLoan, calculateDueAmount, fetchNft } from "./utils";
+import { fetchLoan, calculateDueAmount, fetchNft, fetchParams, removeFromArray, search } from "./utils";
 
 export function handleLoanCreated(event: LoanCreatedEvent): void {
   let entity = fetchLoan(event.params.loanId);
@@ -147,4 +164,143 @@ export function handleNFTClaimed(event: NFTClaimedEvent): void {
   ev.user = event.transaction.from;
 
   ev.save();
+}
+
+export function handlePriceIndexSet(event: PriceIndexSet): void {
+  let entity = fetchParams(event.address);
+  entity.priceIndex = event.params.newPriceIndex;
+  entity.save();
+}
+
+export function handleAllowListSet(event: AllowListSet): void {
+  let entity = fetchParams(event.address);
+  entity.allowList = event.params.newAllowList;
+  entity.save();
+}
+
+export function handleGovernanceTreasurySet(event: GovernanceTreasurySet): void {
+  let entity = fetchParams(event.address);
+  entity.governanceTreasury = event.params.newGovernanceTreasury;
+  entity.save();
+}
+
+export function handleRepayGracePeriodSet(event: RepayGracePeriodSet): void {
+  let entity = fetchParams(event.address);
+  entity.repayGracePeriod = event.params.newRepayGracePeriod;
+  entity.save();
+}
+
+export function handleRepayGraceFeeSet(event: RepayGraceFeeSet): void {
+  let entity = fetchParams(event.address);
+  entity.repayGraceFee = event.params.newRepayGraceFee;
+  entity.save();
+}
+
+export function handleProtocolFeeSet(event: ProtocolFeeSet): void {
+  let entity = fetchParams(event.address);
+  entity.protocolFee = event.params.newProtocolFee;
+  entity.save();
+}
+
+export function handleLiquidationFeeSet(event: LiquidationFeeSet): void {
+  let entity = fetchParams(event.address);
+  entity.liquidationFee = event.params.newLiquidationFee;
+  entity.save();
+}
+
+export function handleBaseOriginationFeeSet(event: BaseOriginationFeeSet): void {
+  let entity = fetchParams(event.address);
+  entity.baseOriginationFee = event.params.newBaseOriginationFee;
+  entity.save();
+}
+
+export function handleTokensSet(event: TokensSet): void {
+  let entity = fetchParams(event.address);
+  const tokens = entity.tokens || [];
+  for (let i = 0; i < event.params.tokens.length; i++) {
+    tokens.push(event.params.tokens[i]);
+  }
+
+  entity.tokens = tokens;
+  entity.save();
+}
+
+export function handleTokensUnset(event: TokensUnset): void {
+  let entity = fetchParams(event.address);
+  let tokens = entity.tokens || [];
+  for (let i = 0; i < event.params.tokens.length; i++) {
+    tokens = removeFromArray(tokens, event.params.tokens[i]);
+  }
+
+  entity.tokens = tokens;
+  entity.save();
+}
+
+export function handleLoanTypesSet(event: LoanTypesSet): void {
+  let entity = fetchParams(event.address);
+  const durations = entity.loanTypesDurations || [];
+  const interestRates = entity.loanTypesInterestRates || [];
+
+  for (let i = 0; i < event.params.durations.length; i++) {
+    durations.push(event.params.durations[i]);
+    interestRates.push(event.params.interestRates[i]);
+  }
+
+  entity.loanTypesDurations = durations;
+  entity.loanTypesInterestRates = interestRates;
+  entity.save();
+}
+
+export function handleLoanTypesUnset(event: LoanTypesUnset): void {
+  let entity = fetchParams(event.address);
+  let durations = entity.loanTypesDurations || [];
+  const interestRates = entity.loanTypesInterestRates || [];
+
+  for (let i = 0; i < event.params.durations.length; i++) {
+    const index = search(durations, event.params.durations[i]);
+    durations = removeFromArray(durations, event.params.durations[i]);
+    interestRates.splice(index, 1);
+  }
+
+  entity.loanTypesDurations = durations;
+  entity.loanTypesInterestRates = interestRates;
+  entity.save();
+}
+
+export function handleOriginationFeeRangesSet(event: OriginationFeeRangesSet): void {
+  let entity = fetchParams(event.address);
+  entity.originationFeeRanges = event.params.originationFeeRanges;
+  entity.save();
+}
+
+export function handleFeeReductionFactorSet(event: FeeReductionFactorSet): void {
+  let entity = fetchParams(event.address);
+  entity.feeReductionFactor = event.params.feeReductionFactor;
+  entity.save();
+}
+
+export function handleLenderExclusiveLiquidationPeriodSet(event: LenderExclusiveLiquidationPeriodSet): void {
+  let entity = fetchParams(event.address);
+  entity.lenderExclusiveLiquidationPeriod = event.params.lenderExclusiveLiquidationPeriod;
+  entity.save();
+}
+
+export function handleNFTAllowed(event: NFTAllowed): void {
+  let entity = fetchParams(event.address);
+
+  let nfts = entity.disallowedNfts;
+  nfts = removeFromArray(nfts, `${event.params.collectionAddress.toHexString()}${event.params.tokenId}`);
+  entity.disallowedNfts = nfts;
+
+  entity.save();
+}
+
+export function handleNFTDisallowed(event: NFTDisallowed): void {
+  let entity = fetchParams(event.address);
+
+  const nfts = entity.disallowedNfts;
+  nfts.push(`${event.params.collectionAddress.toHexString()}${event.params.tokenId}`);
+  entity.disallowedNfts = nfts;
+
+  entity.save();
 }

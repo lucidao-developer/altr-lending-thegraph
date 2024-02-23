@@ -7,6 +7,25 @@ enum LoanStatus {
   NFT_CLAIMED
 }
 
+type Params @entity(immutable: false) {
+  id: ID!
+  priceIndex: Bytes!
+  allowList: Bytes!
+  governanceTreasury: Bytes!
+  repayGraceFee: BigInt!
+  protocolFee: BigInt!
+  liquidationFee: BigInt!
+  baseOriginationFee: BigInt!
+  feeReductionFactor: BigInt!
+  originationFeeRanges: [BigInt!]!
+  tokens: [Bytes!]!
+  loanTypesDurations: [BigInt!]!
+  loanTypesInterestRates: [BigInt!]!
+  repayGracePeriod: BigInt!
+  lenderExclusiveLiquidationPeriod: BigInt!
+  disallowedNfts: [Nft!]!
+}
+
 type Loan @entity(immutable: false) {
   id: ID!
   status: LoanStatus!

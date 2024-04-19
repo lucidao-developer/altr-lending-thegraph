@@ -2,7 +2,7 @@
   "name": "altr-lending",
   "license": "UNLICENSED",
   "scripts": {
-    "prepare-testnet": "source .env.development && mustache config/mumbai.json subgraph.template.yaml > subgraph.yaml && graph auth --product hosted-service $TOKEN",
+    "prepare-testnet": "source .env.development && mustache config/amoy.json subgraph.template.yaml > subgraph.yaml && graph auth --product hosted-service $TOKEN",
     "prepare-mainnet": "source .env.production && mustache config/polygon.json subgraph.template.yaml > subgraph.yaml && graph auth --product hosted-service $TOKEN",
     "codegen": "graph codegen",
     "build": "graph build",

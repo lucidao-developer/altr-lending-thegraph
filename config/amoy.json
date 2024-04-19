@@ -1,0 +1,9 @@
+{
+  "network": "polygon-amoy",
+  "LendingAddress": "0x0da01ce32Df8502e762D71E023Dd8d57878dc619",
+  "LendingStartBlock": 6016667,
+  "PriceIndexAddress": "0x3b7B73D41fFEe199E39fee16a87b2D6245833269",
+  "PriceIndexStartBlock": 6016667,
+  "NftCollectionFactoryAddress": "0x5dc79361d0fA2Eed97B49B75391f1b195DBedb08",
+  "NftCollectionFactoryStartBlock": 6016667
+}

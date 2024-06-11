@@ -2,12 +2,14 @@
   "name": "altr-lending",
   "license": "UNLICENSED",
   "scripts": {
-    "prepare-testnet": "source .env.development && mustache config/amoy.json subgraph.template.yaml > subgraph.yaml && graph auth --product hosted-service $TOKEN",
-    "prepare-mainnet": "source .env.production && mustache config/polygon.json subgraph.template.yaml > subgraph.yaml && graph auth --product hosted-service $TOKEN",
+    "prepare-testnet": "source .env.development && mustache config/amoy.json subgraph.template.yaml > subgraph.yaml",
+    "prepare-mainnet": "bash -c '. .env.production && mustache config/polygon.json subgraph.template.yaml > subgraph.yaml'",
     "codegen": "graph codegen",
     "build": "graph build",
     "deploy-mainnet": "source .env.production && graph deploy --node https://api.thegraph.com/deploy/ $NAME",
     "deploy-testnet": "source .env.development && graph deploy --node https://api.thegraph.com/deploy/ $NAME",
+    "deploy-testnet-alchemy": "source .env.development && graph deploy $NAME --node https://subgraphs.alchemy.com/api/subgraphs/deploy --deploy-key $TOKEN --ipfs https://ipfs.satsuma.xyz",
+    "deploy-mainnet-alchemy": "bash -c '. .env.production && graph deploy $NAME --node https://subgraphs.alchemy.com/api/subgraphs/deploy --deploy-key $TOKEN --ipfs https://ipfs.satsuma.xyz'",
     "test": "graph test"
   },
   "dependencies": {
